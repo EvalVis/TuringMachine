@@ -68,8 +68,16 @@
                 </div>
 
                 <div class="controls">
-                    <button id="step-btn" class="btn btn-primary">Step</button>
-                    <button id="run-btn" class="btn btn-success">Run</button>
+                    <div class="speed-control">
+                        <label for="speed-slider">Step Delay:</label>
+                        <input type="range" id="speed-slider" min="50" max="2000" value="500" step="50">
+                        <span id="speed-display">500ms</span>
+                    </div>
+                    <div class="control-buttons">
+                        <button id="step-btn" class="btn btn-primary">Step</button>
+                        <button id="run-btn" class="btn btn-success">Run</button>
+                        <button id="fastest-run-btn" class="btn btn-warning">Fastest Run</button>
+                    </div>
                 </div>
             </section>
             <section class="instructions-section">

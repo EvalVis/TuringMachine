@@ -265,9 +265,69 @@ section h3 {
 
 .controls {
     display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+}
+
+.speed-control {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    border: 2px solid #e9ecef;
+}
+
+.speed-control label {
+    font-weight: 600;
+    color: #2c3e50;
+    margin: 0;
+}
+
+.speed-control #speed-slider {
+    width: 200px;
+    height: 6px;
+    border-radius: 3px;
+    background: #ddd;
+    outline: none;
+    -webkit-appearance: none;
+}
+
+.speed-control #speed-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #3498db;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.speed-control #speed-slider::-webkit-slider-thumb:hover {
+    background: #2980b9;
+    transform: scale(1.1);
+}
+
+.speed-control #speed-display {
+    font-weight: 600;
+    color: #34495e;
+    min-width: 60px;
+    text-align: center;
+}
+
+.control-buttons {
+    display: flex;
     gap: 15px;
     justify-content: center;
     flex-wrap: wrap;
+}
+
+.btn-warning {
+    background: linear-gradient(135deg, #f39c12, #e67e22);
+    color: white;
 }
 
 .instruction-grid {

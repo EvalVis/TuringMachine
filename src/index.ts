@@ -20,9 +20,14 @@ class TuringMachineVisualizer {
     private setupEventListeners(): void {
         document.getElementById('step-btn')?.addEventListener('click', () => this.step());
         document.getElementById('run-btn')?.addEventListener('click', () => this.run());
+        document.getElementById('fastest-run-btn')?.addEventListener('click', () => this.fastestRun());
         document.getElementById('reset-btn')?.addEventListener('click', () => this.reset());
         document.getElementById('load-example')?.addEventListener('click', () => this.loadExample());
         document.getElementById('clear-btn')?.addEventListener('click', () => this.clear());
+        
+        const speedSlider = document.getElementById('speed-slider') as HTMLInputElement;
+        speedSlider?.addEventListener('input', () => this.updateSpeedDisplay());
+        
         document.getElementById('tape-input')?.addEventListener('input', () => {
             this.updateTapeDisplay();
             this.markMachineStale();
@@ -97,11 +102,40 @@ class TuringMachineVisualizer {
         
         while (!this.currentResult?.isInFinalState && !this.currentResult?.hasCrashed && this.isRunning) {
             this.step();
-            await new Promise(resolve => setTimeout(resolve, 500));
+            const speedSlider = document.getElementById('speed-slider') as HTMLInputElement;
+            const delay = parseInt(speedSlider.value) || 500;
+            await new Promise(resolve => setTimeout(resolve, delay));
         }
         
         this.isRunning = false;
         this.updateButtons();
+    }
+
+    private async fastestRun(): Promise<void> {
+        if (!this.machine) return;
+        
+        if (this.machineNeedsRecreation) {
+            this.recreateMachinePreservingExecution();
+            this.machineNeedsRecreation = false;
+        }
+        
+        this.isRunning = true;
+        this.machineHasStarted = true;
+        this.updateButtons();
+        
+        this.currentResult = this.machine.execute();
+        this.updateDisplay();
+        
+        this.isRunning = false;
+        this.updateButtons();
+    }
+
+    private updateSpeedDisplay(): void {
+        const speedSlider = document.getElementById('speed-slider') as HTMLInputElement;
+        const speedDisplay = document.getElementById('speed-display') as HTMLSpanElement;
+        if (speedSlider && speedDisplay) {
+            speedDisplay.textContent = `${speedSlider.value}ms`;
+        }
     }
 
     private reset(): void {
@@ -280,6 +314,7 @@ class TuringMachineVisualizer {
     private updateButtons(): void {
         const stepBtn = document.getElementById('step-btn') as HTMLButtonElement;
         const runBtn = document.getElementById('run-btn') as HTMLButtonElement;
+        const fastestRunBtn = document.getElementById('fastest-run-btn') as HTMLButtonElement;
         const resetBtn = document.getElementById('reset-btn') as HTMLButtonElement;
         const initialStateInput = document.getElementById('initial-state') as HTMLInputElement;
         
@@ -288,7 +323,9 @@ class TuringMachineVisualizer {
         
         stepBtn.disabled = !machineExists || this.isRunning || !!isFinished;
         runBtn.disabled = !machineExists || this.isRunning || !!isFinished;
+        fastestRunBtn.disabled = !machineExists || this.isRunning || !!isFinished;
         runBtn.textContent = this.isRunning ? 'Running...' : 'Run';
+        fastestRunBtn.textContent = this.isRunning ? 'Running...' : 'Fastest Run';
         resetBtn.disabled = !machineExists;
         initialStateInput.disabled = this.machineHasStarted;
     }
