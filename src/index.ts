@@ -124,7 +124,7 @@ class TuringMachineVisualizer {
         this.updateDisplay();
     }
 
-    private createMachineFromInput(): void {
+    private createMachineFromInput(currentState: string | undefined = undefined, headPosition: number | undefined = undefined): void {
         try {
             const tapeInput = (document.getElementById('tape-input') as HTMLTextAreaElement).value;
             const initialState = (document.getElementById('initial-state') as HTMLInputElement).value;
@@ -165,7 +165,7 @@ class TuringMachineVisualizer {
             }
 
             const instructionTable = new InstructionTable(instructionsMap);
-            this.machine = new TuringMachine(initialState, finalStates, instructionTable, tape);
+            this.machine = new TuringMachine(currentState || initialState, finalStates, instructionTable, tape, headPosition);
             this.currentResult = null;
         } catch (error) {
             alert(`Error creating machine: ${error}`);
@@ -312,14 +312,10 @@ class TuringMachineVisualizer {
             this.createMachineFromInput();
             return;
         }
-
-        const preservedState = this.currentResult.state;
-        const preservedHeadPosition = this.currentResult.headPosition;
         
-        this.createMachineFromInput();
+        this.createMachineFromInput(this.currentResult.state, this.currentResult.headPosition);
         
-        this.currentResult.state = preservedState;
-        this.currentResult.headPosition = preservedHeadPosition;
+        this.currentResult = null;
     }
 
 
