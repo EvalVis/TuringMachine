@@ -10,6 +10,7 @@ class TuringMachineVisualizer {
     private isRunning = false;
     private currentResult: ExecutionResult | null = null;
     private machineNeedsRecreation = false;
+    private machineHasStarted = false;
 
     constructor() {
         this.setupEventListeners();
@@ -22,7 +23,10 @@ class TuringMachineVisualizer {
         document.getElementById('reset-btn')?.addEventListener('click', () => this.reset());
         document.getElementById('load-example')?.addEventListener('click', () => this.loadExample());
         document.getElementById('clear-btn')?.addEventListener('click', () => this.clear());
-        document.getElementById('tape-input')?.addEventListener('input', () => this.updateTapeDisplay());
+        document.getElementById('tape-input')?.addEventListener('input', () => {
+            this.updateTapeDisplay();
+            this.markMachineStale();
+        });
         document.getElementById('instructions-input')?.addEventListener('input', () => this.markMachineStale());
         document.getElementById('initial-state')?.addEventListener('input', () => this.markMachineStale());
         document.getElementById('final-states')?.addEventListener('input', () => this.markMachineStale());
@@ -65,12 +69,14 @@ class TuringMachineVisualizer {
         if (!this.machine) return;
         
         if (this.machineNeedsRecreation) {
-            this.createMachineFromInput();
+            this.recreateMachinePreservingExecution();
             this.machineNeedsRecreation = false;
         }
         
+        this.machineHasStarted = true;
         this.currentResult = this.machine.step();
         this.updateDisplay();
+        this.updateButtons();
         
         if (this.currentResult.isInFinalState || this.currentResult.hasCrashed) {
             this.isRunning = false;
@@ -82,7 +88,7 @@ class TuringMachineVisualizer {
         if (!this.machine) return;
         
         if (this.machineNeedsRecreation) {
-            this.createMachineFromInput();
+            this.recreateMachinePreservingExecution();
             this.machineNeedsRecreation = false;
         }
         
@@ -100,6 +106,7 @@ class TuringMachineVisualizer {
 
     private reset(): void {
         this.isRunning = false;
+        this.machineHasStarted = false;
         this.createMachineFromInput();
         this.updateDisplay();
         this.updateButtons();
@@ -113,6 +120,7 @@ class TuringMachineVisualizer {
         (document.getElementById('instructions-input') as HTMLTextAreaElement).value = '';
         this.machine = null;
         this.currentResult = null;
+        this.machineHasStarted = false;
         this.updateDisplay();
     }
 
@@ -208,8 +216,6 @@ class TuringMachineVisualizer {
         const headPosition = this.currentResult?.headPosition || 0;
         const blankSymbol = (document.getElementById('blank-symbol') as HTMLInputElement).value || '_';
         
-        let html = '<div class="tape-container">';
-        
         let leftmostPos = headPosition;
         let rightmostPos = headPosition;
         
@@ -225,21 +231,31 @@ class TuringMachineVisualizer {
             rightmostPos = headPosition + 2;
         }
         
-        for (let i = leftmostPos; i <= rightmostPos; i++) {
-            let symbol: string;
-            if (i < tapeString.length && tapeString[i] !== undefined) {
-                symbol = tapeString[i];
-            } else {
-                symbol = blankSymbol;
+        const cellsPerRow = 15;
+        let html = '<div class="tape-rows">';
+        
+        for (let rowStart = leftmostPos; rowStart <= rightmostPos; rowStart += cellsPerRow) {
+            const rowEnd = Math.min(rowStart + cellsPerRow - 1, rightmostPos);
+            html += '<div class="tape-row">';
+            
+            for (let i = rowStart; i <= rowEnd; i++) {
+                let symbol: string;
+                if (i < tapeString.length && tapeString[i] !== undefined) {
+                    symbol = tapeString[i];
+                } else {
+                    symbol = blankSymbol;
+                }
+                
+                if (symbol === undefined || symbol === null) {
+                    symbol = blankSymbol;
+                }
+                
+                const isHead = i === headPosition;
+                const displaySymbol = symbol === ' ' ? '&nbsp;' : symbol;
+                html += `<div class="tape-cell ${isHead ? 'head-position' : ''}" data-position="${i}">${displaySymbol}</div>`;
             }
             
-            if (symbol === undefined || symbol === null) {
-                symbol = blankSymbol;
-            }
-            
-            const isHead = i === headPosition;
-            const displaySymbol = symbol === ' ' ? '&nbsp;' : symbol;
-            html += `<div class="tape-cell ${isHead ? 'head-position' : ''}">${displaySymbol}</div>`;
+            html += '</div>';
         }
         
         html += '</div>';
@@ -267,6 +283,7 @@ class TuringMachineVisualizer {
         const stepBtn = document.getElementById('step-btn') as HTMLButtonElement;
         const runBtn = document.getElementById('run-btn') as HTMLButtonElement;
         const resetBtn = document.getElementById('reset-btn') as HTMLButtonElement;
+        const initialStateInput = document.getElementById('initial-state') as HTMLInputElement;
         
         const machineExists = this.machine !== null;
         const isFinished = this.currentResult?.isInFinalState || this.currentResult?.hasCrashed;
@@ -275,6 +292,7 @@ class TuringMachineVisualizer {
         runBtn.disabled = !machineExists || this.isRunning || !!isFinished;
         runBtn.textContent = this.isRunning ? 'Running...' : 'Run';
         resetBtn.disabled = !machineExists;
+        initialStateInput.disabled = this.machineHasStarted;
     }
 
     private updateTapeDisplay(): void {
@@ -288,6 +306,25 @@ class TuringMachineVisualizer {
     private markMachineStale(): void {
         this.machineNeedsRecreation = true;
     }
+
+    private recreateMachinePreservingExecution(): void {
+        if (!this.currentResult) {
+            this.createMachineFromInput();
+            return;
+        }
+
+        const preservedState = this.currentResult.state;
+        const preservedHeadPosition = this.currentResult.headPosition;
+        
+        this.createMachineFromInput();
+        
+        if (this.currentResult) {
+            this.currentResult.state = preservedState;
+            this.currentResult.headPosition = preservedHeadPosition;
+        }
+    }
+
+
 }
 
 document.addEventListener('DOMContentLoaded', () => {
