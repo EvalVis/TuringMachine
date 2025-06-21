@@ -3,9 +3,9 @@ import { Head } from './head';
 import { InstructionTable, InstructionKey, Instruction } from './instruction-table';
 
 interface ExecutionResult {
-    tapeString: string;
-    currentState: string;
-    success: boolean;
+    tape: string;
+    state: string;
+    isInFinalState: boolean;
     headPosition: number;
 }
 
@@ -51,9 +51,9 @@ class TuringMachine {
 
     private createExecutionResult(sucess: boolean): ExecutionResult {
         return {
-            tapeString: this.tape.toString(),
-            currentState: this.currentState,
-            success: sucess,
+            tape: this.tape.toString(),
+            state: this.currentState,
+            isInFinalState: sucess,
             headPosition: this.head.currentPosition()
         };
     }
