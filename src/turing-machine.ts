@@ -1,17 +1,6 @@
 import { Tape } from './tape';
 import { Head } from './head';
-import { Direction } from './direction';
-
-interface InstructionKey {
-    currentState: string;
-    currentValue: string;
-}
-
-interface Instruction {
-    nextState: string;
-    writeValue: string;
-    direction: Direction;
-}
+import { InstructionTable, InstructionKey, Instruction } from './instruction-table';
 
 interface ExecutionResult {
     tapeString: string;
@@ -23,14 +12,14 @@ interface ExecutionResult {
 class TuringMachine {
     private currentState: string;
     private haltingStates: Set<string>;
-    private instructionTable: Map<InstructionKey, Instruction>;
+    private instructionTable: InstructionTable;
     private tape: Tape;
     private head: Head;
 
     constructor(
         initialState: string,
         haltingStates: string[],
-        instructionTable: Map<InstructionKey, Instruction>,
+        instructionTable: InstructionTable,
         tape: Tape
     ) {
         this.currentState = initialState;
@@ -45,7 +34,7 @@ class TuringMachine {
     execute(): ExecutionResult {
         while (!this.haltingStates.has(this.currentState)) {
             const currentValue = this.head.read();
-            const instructionKey: InstructionKey = {currentState: this.currentState, currentValue: currentValue};
+            const instructionKey = new InstructionKey(this.currentState, currentValue);
             
             if (!this.instructionTable.has(instructionKey)) {
                 return this.createExecutionResult(false);

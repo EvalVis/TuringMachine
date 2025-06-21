@@ -1,12 +1,14 @@
 class Tape {
     private data: Map<number, string>;
+    private blankSymbol: string;
 
-    constructor(initialData: Map<number, string>) {
+    constructor(initialData: Map<number, string>, blankSymbol: string) {
         this.data = new Map(initialData);
+        this.blankSymbol = blankSymbol;
     }
 
     read(index: number): string {
-        return this.data.get(index) ?? "b";
+        return this.data.get(index) ?? this.blankSymbol;
     }
 
     write(index: number, value: string): void {
@@ -41,7 +43,7 @@ class Tape {
             
             const nextPos = positions[i + 1];
             const gap = nextPos - currentPos - 1;
-            result += "b".repeat(gap);
+            result += this.blankSymbol.repeat(gap);
         }
         
         if (positions.length > 0) {
