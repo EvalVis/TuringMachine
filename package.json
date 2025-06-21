@@ -1,0 +1,24 @@
+{
+  "name": "turingmachine",
+  "version": "1.0.0",
+  "description": "An open-source turing machine implementation",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "serve": "npm run build && http-server . -p 8080 -o"
+  },
+  "keywords": [
+    "open-source",
+    "turing-machine",
+	"typescript"
+  ],
+  "author": "Evaldas Visockas",
+  "license": "AGPL-3.0",
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0",
+    "ts-node": "^10.9.0",
+    "http-server": "^14.1.1"
+  },
+  "dependencies": {}
+} 
