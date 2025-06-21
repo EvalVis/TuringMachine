@@ -6,6 +6,7 @@ interface ExecutionResult {
     tape: string;
     state: string;
     isInFinalState: boolean;
+    hasCrashed: boolean;
     headPosition: number;
 }
 
@@ -37,7 +38,7 @@ class TuringMachine {
             const instructionKey = new InstructionKey(this.currentState, currentValue);
             
             if (!this.instructionTable.has(instructionKey)) {
-                return this.createExecutionResult(false);
+                return this.createExecutionResult(false, true);
             }
 
             const instruction = this.instructionTable.get(instructionKey)!;
@@ -46,14 +47,15 @@ class TuringMachine {
             this.currentState = instruction.nextState;
         }
 
-        return this.createExecutionResult(true);
+        return this.createExecutionResult(true, false);
     }
 
-    private createExecutionResult(sucess: boolean): ExecutionResult {
+    private createExecutionResult(isInFinalState: boolean, hasCrashed: boolean): ExecutionResult {
         return {
             tape: this.tape.toString(),
             state: this.currentState,
-            isInFinalState: sucess,
+            isInFinalState: isInFinalState,
+            hasCrashed: hasCrashed,
             headPosition: this.head.currentPosition()
         };
     }
