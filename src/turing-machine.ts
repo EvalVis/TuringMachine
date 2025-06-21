@@ -16,7 +16,7 @@ interface Instruction {
 interface ExecutionResult {
     tapeString: string;
     currentState: string;
-    hasCrashed: boolean;
+    success: boolean;
     headPosition: number;
 }
 
@@ -60,11 +60,11 @@ class TuringMachine {
         return this.createExecutionResult(true);
     }
 
-    private createExecutionResult(hasCrashed: boolean): ExecutionResult {
+    private createExecutionResult(sucess: boolean): ExecutionResult {
         return {
             tapeString: this.tape.toString(),
             currentState: this.currentState,
-            hasCrashed: hasCrashed,
+            success: sucess,
             headPosition: this.head.currentPosition()
         };
     }
