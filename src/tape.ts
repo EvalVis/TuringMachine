@@ -58,6 +58,14 @@ class Tape {
         
         return result;
     }
+
+    getLeftmostPosition(): number {
+        if (this.data.size === 0) {
+            return 0;
+        }
+        const positions = Array.from(this.data.keys()).sort((a, b) => a - b);
+        return positions[0];
+    }
 }
 
 export { Tape }; 

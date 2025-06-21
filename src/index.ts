@@ -219,15 +219,14 @@ class TuringMachineVisualizer {
         let leftmostPos = headPosition;
         let rightmostPos = headPosition;
         
-        for (let i = 0; i < tapeString.length; i++) {
-            if (tapeString[i] !== blankSymbol && tapeString[i] !== ' ' && tapeString[i] !== undefined) {
-                leftmostPos = Math.min(leftmostPos, i);
-                rightmostPos = Math.max(rightmostPos, i);
-            }
+        if (this.machine && tapeString.length > 0) {
+            const tapeLeftmost = this.machine.getTapeLeftmostPosition();
+            leftmostPos = Math.min(leftmostPos, tapeLeftmost);
+            rightmostPos = Math.max(rightmostPos, tapeLeftmost + tapeString.length - 1);
         }
         
         if (leftmostPos === headPosition && rightmostPos === headPosition) {
-            leftmostPos = Math.max(0, headPosition - 2);
+            leftmostPos = headPosition - 2;
             rightmostPos = headPosition + 2;
         }
         
@@ -239,15 +238,14 @@ class TuringMachineVisualizer {
             html += '<div class="tape-row">';
             
             for (let i = rowStart; i <= rowEnd; i++) {
-                let symbol: string;
-                if (i < tapeString.length && tapeString[i] !== undefined) {
-                    symbol = tapeString[i];
-                } else {
-                    symbol = blankSymbol;
-                }
+                let symbol = blankSymbol;
                 
-                if (symbol === undefined || symbol === null) {
-                    symbol = blankSymbol;
+                if (this.machine && tapeString.length > 0) {
+                    const leftmostPos = this.machine.getTapeLeftmostPosition();
+                    const stringIndex = i - leftmostPos;
+                    if (stringIndex >= 0 && stringIndex < tapeString.length) {
+                        symbol = tapeString[stringIndex];
+                    }
                 }
                 
                 const isHead = i === headPosition;

@@ -88,6 +88,10 @@ class TuringMachine {
     private isInFinalState(): boolean {
         return this.haltingStates.has(this.currentState);
     }
+
+    getTapeLeftmostPosition(): number {
+        return this.tape.getLeftmostPosition();
+    }
 }
 
 export { TuringMachine, Instruction, ExecutionResult }; 
