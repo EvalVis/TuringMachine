@@ -50,6 +50,22 @@ class TuringMachine {
         return this.createExecutionResult(false);
     }
 
+    step(): ExecutionResult {
+        const currentValue = this.head.read();
+        const instructionKey = new InstructionKey(this.currentState, currentValue);
+
+        if (this.hasCrashed(instructionKey)) {
+            return this.createExecutionResult(true);
+        }
+
+        const instruction = this.instructionTable.get(instructionKey)!;
+        this.head.write(instruction.writeValue);
+        this.head.move(instruction.direction);
+        this.currentState = instruction.nextState;
+
+        return this.createExecutionResult(false);
+    }
+
     private createExecutionResult(hasCrashed: boolean): ExecutionResult {
         return {
             tape: this.tape.toString(),
