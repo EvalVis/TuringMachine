@@ -3,13 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Turing machine</title>
+    <title>Turing Machine Visualizer</title>
     <link rel="stylesheet" href="index.css">
 </head>
 <body>
-    <div>
-        <h1>Turing machine</h1>
+    <div class="container">
+        <header>
+            <h1>🤖 Turing Machine Visualizer</h1>
+            <p>Interactive visualization of Turing Machine computation</p>
+        </header>
+
+        <div class="main-content">
+            <section class="config-section">
+                <h2>Machine Configuration</h2>
+                <div class="config-grid">
+                    <div class="config-item">
+                        <label for="tape-input">Initial Tape:</label>
+                        <textarea id="tape-input" placeholder="Enter initial tape content (e.g., 101)"></textarea>
+                    </div>
+                    
+
+                    
+                    <div class="config-item">
+                        <label for="initial-state">Initial State:</label>
+                        <input type="text" id="initial-state" placeholder="q0" />
+                    </div>
+                    
+                    <div class="config-item">
+                        <label for="final-states">Final States:</label>
+                        <input type="text" id="final-states" placeholder="q2" />
+                    </div>
+                    
+                    <div class="config-item">
+                        <label for="blank-symbol">Blank Symbol:</label>
+                        <input type="text" id="blank-symbol" placeholder="_" maxlength="1" />
+                        <small>Single character to represent empty cells</small>
+                    </div>
+                </div>
+
+                <div class="config-item full-width">
+                    <label for="instructions-input">Transition Rules:</label>
+                    <textarea id="instructions-input" rows="6" 
+                              placeholder="Format: currentState,currentSymbol -> nextState,writeSymbol,direction&#10;Example:&#10;q0,0 -> q0,0,R&#10;q0,1 -> q0,1,R&#10;q0,_ -> q1,_,L"></textarea>
+                    <small>Direction: L (Left), R (Right), S (Stay)</small>
+                </div>
+
+                <div class="button-group">
+                    <button id="load-example" class="btn btn-secondary">Load Example</button>
+                    <button id="clear-btn" class="btn btn-secondary">Clear</button>
+                    <button id="reset-btn" class="btn btn-primary">Reset Machine</button>
+                </div>
+            </section>
+            <section class="visualization-section">
+                <h2>Machine Execution</h2>
+                
+                <div class="status-bar">
+                    <div id="machine-status" class="status">Machine ready</div>
+                </div>
+
+                <div class="tape-section">
+                    <h3>Tape</h3>
+                    <div id="tape-display" class="tape-display">
+                    </div>
+                </div>
+
+                <div class="controls">
+                    <button id="step-btn" class="btn btn-primary">Step</button>
+                    <button id="run-btn" class="btn btn-success">Run</button>
+                </div>
+            </section>
+            <section class="instructions-section">
+                <h2>How to Use</h2>
+                <div class="instruction-grid">
+                    <div class="instruction-item">
+                        <h4>1. Configure the Machine</h4>
+                        <p>Set the initial tape content, initial state, final states, and transition rules. States are automatically discovered from the rules. Click "Load Example" for a sample binary incrementer.</p>
+                    </div>
+                    <div class="instruction-item">
+                        <h4>2. Run the Machine</h4>     
+                        <p>Use "Step" to execute one transition at a time, or "Run" to execute until the machine halts or crashes.</p>
+                    </div>
+                    <div class="instruction-item">
+                        <h4>3. Watch the Execution</h4>
+                        <p>The tape shows the current head position (highlighted), and the status shows the current state.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
     </div>
-    <script src="dist/index.js"></script>
+    
+    <script type="module" src="dist/index.js"></script>
 </body>
 </html> 

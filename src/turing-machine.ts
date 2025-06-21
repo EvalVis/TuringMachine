@@ -1,6 +1,6 @@
-import { Tape } from './tape';
-import { Head } from './head';
-import { InstructionTable, InstructionKey, Instruction } from './instruction-table';
+import { Tape } from './tape.js';
+import { Head } from './head.js';
+import { InstructionTable, InstructionKey, Instruction } from './instruction-table.js';
 
 interface ExecutionResult {
     tape: string;
@@ -51,6 +51,10 @@ class TuringMachine {
     }
 
     step(): ExecutionResult {
+        if (this.isInFinalState()) {
+            return this.createExecutionResult(false);
+        }
+
         const currentValue = this.head.read();
         const instructionKey = new InstructionKey(this.currentState, currentValue);
 

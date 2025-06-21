@@ -1,5 +1,5 @@
-import { Tape } from './tape';
-import { Direction } from './direction';
+import { Tape } from './tape.js';
+import { Direction } from './direction.js';
 
 class Head {
     private position: number;
