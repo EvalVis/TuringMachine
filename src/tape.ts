@@ -12,7 +12,13 @@ class Tape {
     }
 
     write(index: number, value: string): void {
-        this.data.set(index, value);
+        if (value == this.blankSymbol) {
+            if (this.data.has(index)) {
+                this.data.delete(index);
+            }
+        } else {
+            this.data.set(index, value);
+        }
     }
 
     findFirstNonBlankPosition(): number {
