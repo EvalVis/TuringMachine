@@ -292,11 +292,10 @@ section h3 {
     border-radius: 3px;
     background: #ddd;
     outline: none;
-    -webkit-appearance: none;
+    appearance: none;
 }
 
 .speed-control #speed-slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
     appearance: none;
     width: 18px;
     height: 18px;

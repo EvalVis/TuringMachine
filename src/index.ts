@@ -302,9 +302,9 @@ class TuringMachineVisualizer {
 
         let status = `State: ${this.currentResult.state}`;
         if (this.currentResult.isInFinalState) {
-            status += ' (ACCEPTED)';
+            status += ' (FINAL STATE)';
         } else if (this.currentResult.hasCrashed) {
-            status += ' (CRASHED)';
+            status += ' (MACHINE CRASHED DUE TO MISSING INSTRUCTION)';
         }
         
         statusDiv.innerHTML = status;
