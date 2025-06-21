@@ -30,6 +30,10 @@ class Head {
                 break;
         }
     }
+
+    currentPosition(): number {
+        return this.position;
+    }
 }
 
 export { Head }; 
