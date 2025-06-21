@@ -21,7 +21,8 @@ class TuringMachine {
         initialState: string,
         haltingStates: string[],
         instructionTable: InstructionTable,
-        tape: Tape
+        tape: Tape,
+        headPosition: number | undefined = undefined
     ) {
         this.currentState = initialState;
         this.haltingStates = new Set(haltingStates);
@@ -29,7 +30,7 @@ class TuringMachine {
         this.tape = tape;
         
         const firstNonBlankPosition = tape.findFirstNonBlankPosition();
-        this.head = new Head(firstNonBlankPosition, tape);
+        this.head = new Head(headPosition || firstNonBlankPosition, tape);
     }
 
     execute(): ExecutionResult {
