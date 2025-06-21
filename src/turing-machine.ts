@@ -33,12 +33,12 @@ class TuringMachine {
     }
 
     execute(): ExecutionResult {
-        while (!this.haltingStates.has(this.currentState)) {
+        while (!this.isInFinalState()) {
             const currentValue = this.head.read();
             const instructionKey = new InstructionKey(this.currentState, currentValue);
-            
-            if (!this.instructionTable.has(instructionKey)) {
-                return this.createExecutionResult(false, true);
+
+            if (this.hasCrashed(instructionKey)) {
+                return this.createExecutionResult(true);
             }
 
             const instruction = this.instructionTable.get(instructionKey)!;
@@ -47,17 +47,25 @@ class TuringMachine {
             this.currentState = instruction.nextState;
         }
 
-        return this.createExecutionResult(true, false);
+        return this.createExecutionResult(false);
     }
 
-    private createExecutionResult(isInFinalState: boolean, hasCrashed: boolean): ExecutionResult {
+    private createExecutionResult(hasCrashed: boolean): ExecutionResult {
         return {
             tape: this.tape.toString(),
             state: this.currentState,
-            isInFinalState: isInFinalState,
+            isInFinalState: this.isInFinalState(),
             hasCrashed: hasCrashed,
             headPosition: this.head.currentPosition()
         };
+    }
+
+    private hasCrashed(instructionKey: InstructionKey): boolean {
+        return !this.instructionTable.has(instructionKey);
+    }
+    
+    private isInFinalState(): boolean {
+        return this.haltingStates.has(this.currentState);
     }
 }
 
