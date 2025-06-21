@@ -3,7 +3,9 @@ class Tape {
     private blankSymbol: string;
 
     constructor(initialData: Map<number, string>, blankSymbol: string) {
-        this.data = new Map(initialData);
+        this.data = new Map(
+            [...initialData].filter(([_, value]) => value !== blankSymbol)
+        );
         this.blankSymbol = blankSymbol;
     }
 
