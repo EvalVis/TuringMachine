@@ -22,7 +22,6 @@ class TuringMachineVisualizer {
         document.getElementById('run-btn')?.addEventListener('click', () => this.run());
         document.getElementById('fastest-run-btn')?.addEventListener('click', () => this.fastestRun());
         document.getElementById('reset-btn')?.addEventListener('click', () => this.reset());
-        document.getElementById('load-example')?.addEventListener('click', () => this.loadExample());
         document.getElementById('clear-btn')?.addEventListener('click', () => this.clear());
         
         const speedSlider = document.getElementById('speed-slider') as HTMLInputElement;
