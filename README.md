@@ -11,6 +11,12 @@ npm install
 npm run serve
 ```
 
+## Hosting
+
+Simplest way to host the app is to use [<small>vercel.com</small>](https://vercel.com). It detects `vercel.json`, installs the dependencies and runs the app on the cloud.
+
+[![Vercel](https://img.shields.io/badge/Deployed_on-Vercel-black?style=for-the-badge&logo=vercel)](https://turingmachine.programmersdiary.com/)
+
 ## License
 
 Please read a `LICENSE` file.
