@@ -298,7 +298,7 @@ class TuringMachineVisualizer {
     private updateTapeDisplay(): void {
         if (this.machine && this.currentResult) {
             this.currentResult.tape = this.getTapeString();
-            this.currentResult.headPosition = this.getInitialHeadPosition();
+            this.currentResult.headPosition = this.currentResult?.headPosition || this.getInitialHeadPosition();
             this.renderTape();
         }
     }
@@ -318,10 +318,8 @@ class TuringMachineVisualizer {
         
         this.createMachineFromInput();
         
-        if (this.currentResult) {
-            this.currentResult.state = preservedState;
-            this.currentResult.headPosition = preservedHeadPosition;
-        }
+        this.currentResult.state = preservedState;
+        this.currentResult.headPosition = preservedHeadPosition;
     }
 
 
