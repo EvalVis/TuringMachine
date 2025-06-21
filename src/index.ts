@@ -1,3 +1,5 @@
 import { Tape } from './tape';
+import { Head } from './head';
+import { Direction } from './direction';
 
-export { Tape };
+export { Tape, Head, Direction };
